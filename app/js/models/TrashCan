@@ -1,0 +1,50 @@
+import {TorusGeometry, CylinderGeometry, MeshPhongMaterial, Mesh, Group} from 'three';
+
+export default class Wheel {
+    constructor () {
+        // Constants
+        const HEIGHT = 60;
+        const CAN_THICCNESS = 20;
+        const PILLAR_THISSNESS = 5;
+
+
+        // Body
+        const body = new CylinderGeometry(CAN_THICCNESS, CAN_THICCNESS, HEIGHT, 360);
+        const bodyMat = new MeshPhongMaterial ({color: 0x025bea});
+        const bodyMesh = new Mesh (body, bodyMat);
+
+        const trashCan = new Group();
+        trashCan.add(bodyMesh);
+
+        // Top
+        const top = new CylinderGeometry(CAN_THICCNESS, CAN_THICCNESS, HEIGHT/5, 360);
+        const topMat = new MeshPhongMaterial({color: 0x025bea});
+        const topMesh = new Mesh(top, topMat);
+        topMesh.translateY(50);
+
+        trashCan.add(topMesh);
+
+        // Pillars on side
+        let pillar;
+        let pillarMat;
+        let pillarMesh;
+        for(let i = 0; i < 4; i++) {
+            pillar = new CylinderGeometry(PILLAR_THISSNESS, PILLAR_THISSNESS, HEIGHT / 3, 360);
+            pillarMat = new MeshPhongMaterial({color: 0x025bea});
+            pillarMesh = new Mesh(pillar, pillarMat);
+            pillarMesh.translateY(35);
+            pillarMesh.rotateY(i * (.5 * Math.PI));
+            pillarMesh.translateZ(20-PILLAR_THISSNESS);
+            trashCan.add(pillarMesh);
+        }
+
+        const inside = new TorusGeometry(5, 10, 30, 100);
+        const insideMat = new MeshPhongMaterial({color: 0x00000});
+        const insideMesh = new Mesh(inside, insideMat);
+        insideMesh.translateY(30);
+        insideMesh.rotateX(.5 * Math.PI);
+        trashCan.add(insideMesh);
+
+        return trashCan;
+    }
+}
